@@ -22,7 +22,12 @@ namespace Corporation.DAL.Persistence.Repositories.Departments
             return _dbContext.Departments.ToList();
         }
 
-        public Department? GetById(int id)
+        public IQueryable<Department> GetAllAsIQueryable()
+        {
+            return _dbContext.Departments;
+        }
+
+        public Department? Get(int id)
         {
             return _dbContext.Departments.Find(id);
         }
