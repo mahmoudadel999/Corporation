@@ -1,4 +1,6 @@
+using Corporation.BLL.Services.Departments;
 using Corporation.DAL.Persistence.Data;
+using Corporation.DAL.Persistence.Repositories.Departments;
 using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.PL
@@ -18,6 +20,10 @@ namespace Corporation.PL
             {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
             #endregion
 

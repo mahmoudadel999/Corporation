@@ -1,4 +1,4 @@
-using Corporation.PL.ViewModels;
+using Corporation.PL.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

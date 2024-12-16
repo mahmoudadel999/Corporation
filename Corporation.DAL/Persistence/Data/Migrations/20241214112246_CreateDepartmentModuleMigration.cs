@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Corporation.DAL.Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDepartmentModuuleMigration : Migration
+    public partial class CreateDepartmentModuleMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

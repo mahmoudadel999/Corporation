@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Corporation.DAL.Persistence.Repositories.Departments
 {
-    internal class DepartmentRepository(AppDbContext dbContext) : IDepartmentRepository
+    public class DepartmentRepository(AppDbContext dbContext) : IDepartmentRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
 

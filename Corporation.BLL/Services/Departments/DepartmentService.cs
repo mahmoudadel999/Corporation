@@ -14,27 +14,26 @@ namespace Corporation.BLL.Services.Departments
     {
         private readonly IDepartmentRepository _departmentRepository = departmentRepository;
 
-        public IEnumerable<DepartmentToReturnDto> GetAllDepartments()
+        public IEnumerable<DepartmentDto> GetAllDepartments()
         {
-            var departments = _departmentRepository.GetAllAsIQueryable().Select(department => new DepartmentToReturnDto
+            var departments = _departmentRepository.GetAllAsIQueryable().Select(department => new DepartmentDto
             {
                 Id = department.Id,
                 Name = department.Name,
                 Code = department.Code,
-                Description = department.Description,
                 CreationDate = department.CreationDate,
             }).AsNoTracking().ToList();
 
             return departments;
         }
 
-        public DepartmentDetailsToReturnDto? GetDepartmentById(int id)
+        public DepartmentDetailsDto? GetDepartmentById(int id)
         {
             var department = _departmentRepository.Get(id);
 
             if (department is { })
             {
-                return new DepartmentDetailsToReturnDto
+                return new DepartmentDetailsDto
                 {
                     Id = department.Id,
                     Name = department.Name,
