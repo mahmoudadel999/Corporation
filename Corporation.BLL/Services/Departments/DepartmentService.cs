@@ -2,11 +2,6 @@
 using Corporation.DAL.Models.Department;
 using Corporation.DAL.Persistence.Repositories.Departments;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Corporation.BLL.Services.Departments
 {

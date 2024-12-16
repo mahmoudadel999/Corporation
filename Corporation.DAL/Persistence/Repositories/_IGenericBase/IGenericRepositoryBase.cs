@@ -11,7 +11,7 @@ namespace Corporation.DAL.Persistence.Repositories._GenericBase
     {
         T? Get(int id);
         IEnumerable<T> GetAll(bool WithAsNoTracking = true);
-        IQueryable<T> GetAllAsQueryable();
+        IQueryable<T> GetAllAsIQueryable();
         int Add(T entity);
         int Update(T entity);
         int Delete(T entity);
