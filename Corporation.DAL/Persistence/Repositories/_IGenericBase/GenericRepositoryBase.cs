@@ -18,12 +18,12 @@ namespace Corporation.DAL.Persistence.Repositories._IGenericBase
         public IEnumerable<T> GetAll(bool WithAsNoTracking = true)
         {
             if (WithAsNoTracking)
-                _dbContext.Set<T>().Where(E => E.Id > 10).AsNoTracking().ToList();
+                _dbContext.Set<T>().Where(X => !X.IsDeleted).AsNoTracking().ToList();
 
             return _dbContext.Set<T>().ToList();
         }
 
-        public IQueryable<T> GetAllAsQueryable()
+        public IQueryable<T> GetAllAsIQueryable()
         {
             return _dbContext.Set<T>();
         }
@@ -33,21 +33,22 @@ namespace Corporation.DAL.Persistence.Repositories._IGenericBase
             return _dbContext.Find<T>(id);
         }
 
-        public int Add(T employee)
+        public int Add(T entity)
         {
-            _dbContext.Set<T>().Add(employee);
+            _dbContext.Set<T>().Add(entity);
             return _dbContext.SaveChanges();
         }
 
-        public int Update(T employee)
+        public int Update(T entity)
         {
-            _dbContext.Set<T>().Update(employee);
+            _dbContext.Set<T>().Update(entity);
             return _dbContext.SaveChanges();
         }
 
-        public int Delete(T employee)
+        public int Delete(T entity)
         {
-            _dbContext.Set<T>().Remove(employee);
+            entity.IsDeleted = true;
+            _dbContext.Set<T>().Update(entity);
             return _dbContext.SaveChanges();
         }
     }
