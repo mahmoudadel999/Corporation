@@ -1,4 +1,5 @@
 ﻿using Corporation.DAL.Models.Department;
+using Corporation.DAL.Models.Employees;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,7 @@ namespace Corporation.DAL.Persistence.Data
         }
 
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+
     }
 }
