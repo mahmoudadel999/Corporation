@@ -14,6 +14,7 @@ namespace Corporation.BLL.Models.Employees
 
         public string Name { get; set; } = null!;
         public int? Age { get; set; }
+        public string? Address { get; set; }
 
         [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
@@ -24,6 +25,8 @@ namespace Corporation.BLL.Models.Employees
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
         public string Gender { get; set; } = null!;
+
+        [Display(Name = "Employee Type")]
         public string EmployeeType { get; set; } = null!;
     }
 }

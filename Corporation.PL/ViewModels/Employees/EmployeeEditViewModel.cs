@@ -1,14 +1,9 @@
 ﻿using Corporation.DAL.Common.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Corporation.BLL.Models.Employees
+namespace Corporation.PL.ViewModels.Employees
 {
-    public class CreatedEmployeeDto
+    public class EmployeeEditViewModel
     {
         [MaxLength(50, ErrorMessage = "Max length of name is 50 chars")]
         [MinLength(5, ErrorMessage = "Min length of name is 5 chars")]
@@ -36,6 +31,7 @@ namespace Corporation.BLL.Models.Employees
 
         [Display(Name = "Hiring Date")]
         public DateOnly HiringDate { get; set; }
+
         public Gender Gender { get; set; }
 
         [Display(Name = "Employee Type")]
