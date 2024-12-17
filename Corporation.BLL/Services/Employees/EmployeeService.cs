@@ -24,8 +24,8 @@ namespace Corporation.BLL.Services.Employees
                 IsActive = E.IsActive,
                 Salary = E.Salary,
                 Email = E.Email,
-                EmployeeType = nameof(E.EmployeeType),
-                Gender = nameof(E.Gender)
+                Gender = E.Gender.ToString(),
+                EmployeeType = E.EmployeeType.ToString(),
             });
         }
 
@@ -39,11 +39,13 @@ namespace Corporation.BLL.Services.Employees
                     Name = employee.Name,
                     Age = employee.Age,
                     Address = employee.Address,
-                    Email = employee.Email,
-                    EmployeeType = nameof(EmployeeType),
-                    Gender = nameof(Gender),
                     IsActive = employee.IsActive,
                     Salary = employee.Salary,
+                    Email = employee.Email,
+                    PhoneNumber = employee.PhoneNumber,
+                    HiringDate = employee.HiringDate,
+                    Gender = employee.Gender,
+                    EmployeeType = employee.EmployeeType,
                 };
 
             return null;

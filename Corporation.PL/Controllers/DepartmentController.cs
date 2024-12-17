@@ -53,11 +53,9 @@ namespace Corporation.PL.Controllers
                 _logger.LogError(ex, ex.Message);
 
                 message = _environment.IsDevelopment() ? ex.Message : "An error has occured during creating the department";
-
-                ModelState.AddModelError(string.Empty, message);
-                return View(department);
             }
-
+            ModelState.AddModelError(string.Empty, message);
+            return View(department);
         }
 
         [HttpGet]
@@ -126,7 +124,6 @@ namespace Corporation.PL.Controllers
             }
             ModelState.AddModelError(string.Empty, message);
             return View(department);
-
         }
 
         [HttpGet]
@@ -150,8 +147,8 @@ namespace Corporation.PL.Controllers
 
             try
             {
-                var delete = _departmentService.DeleteDepartment(id);
-                if (delete)
+                var deleted = _departmentService.DeleteDepartment(id);
+                if (deleted)
                     return RedirectToAction(nameof(Index));
 
                 message = "An error has occured during deleting the department";
