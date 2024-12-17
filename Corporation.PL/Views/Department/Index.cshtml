@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<DepartmentDto>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Department";
 }
 
 <h1 class="my-4">Department</h1>
@@ -47,14 +47,14 @@
                         </a> *@
 
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@department.Id">
                             <i class="fas fa-trash"></i>
                             Delete
                         </button>
                     </td>
                 </tr>
                 <!-- Modal -->
-                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteModal-@department.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -62,7 +62,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Are yuo sure Delete this department
+                                Are you sure to Delete this department?
                             </div>
                             <div class="modal-footer">
                                 <form asp-action="Delete" asp-route-id="@department.Id">

@@ -1,6 +1,8 @@
 using Corporation.BLL.Services.Departments;
+using Corporation.BLL.Services.Employees;
 using Corporation.DAL.Persistence.Data;
 using Corporation.DAL.Persistence.Repositories.Departments;
+using Corporation.DAL.Persistence.Repositories.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.PL
@@ -22,8 +24,10 @@ namespace Corporation.PL
             });
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             #endregion
 
