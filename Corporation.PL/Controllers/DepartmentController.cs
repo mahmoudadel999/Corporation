@@ -22,6 +22,7 @@ namespace Corporation.PL.Controllers
             return View(departments);
         }
 
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -29,6 +30,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreatedDepartmentDto department)
         {
             if (!ModelState.IsValid)
@@ -91,6 +93,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel department)
         {
             if (!ModelState.IsValid)
@@ -126,7 +129,7 @@ namespace Corporation.PL.Controllers
             return View(department);
         }
 
-        [HttpGet]
+        [HttpGet] // Create view delete [HttpGet] when you decide to delete the department you will go to view and submit delete department.
         public IActionResult Delete(int? id)
         {
             if (id is null)
@@ -141,6 +144,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;
