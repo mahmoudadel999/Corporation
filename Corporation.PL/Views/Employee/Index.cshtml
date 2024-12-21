@@ -3,6 +3,20 @@
     ViewData["Title"] = "Employee";
 }
 
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="toast show position-fixed end-0 top-0 p-2" style="z-index:99;" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Employee</strong>
+            <small class="text-muted">1 sec ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["Message"]
+        </div>
+    </div>
+}
+
 <h1 class="my-4">Employee</h1>
 
 <a class="btn btn-primary mb-3" asp-controller="Employee" asp-action="Create">Create new Employee</a>
@@ -37,30 +51,7 @@
                         <td>@Html.DisplayFor(X => employee.Salary)</td>
                         <td>@Html.DisplayFor(X => employee.IsActive)</td>
                         <td>@Html.DisplayFor(X => employee.EmployeeType)</td>
-                        <td>
-                            <a class="btn btn-warning" asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Id">
-                                <i class="fas fa-eye"></i>
-                                Details
-                            </a>
-                        </td>
-                        <td>
-                            <a class="btn btn-success" asp-controller="employee" asp-action="Edit" asp-route-id="@employee.Id">
-                                <i class="fas fa-edit"></i>
-                                Update
-                            </a>
-                        </td>
-                        <td>
-                            @* <a class="btn btn-danger" asp-controller="employee" asp-action="Delete" asp-route-id="@employee.Id">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </a> *@
-
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@employee.Id">
-                                <i class="fas fa-trash"></i>
-                                Delete
-                            </button>
-                        </td>
+                        <partial name="_ButtonsPartial" model="@employee.Id" />
                     </tr>
                     <!-- Modal -->
                     <div class="modal fade" id="deleteModal-@employee.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

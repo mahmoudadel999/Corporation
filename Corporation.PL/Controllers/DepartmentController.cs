@@ -39,16 +39,13 @@ namespace Corporation.PL.Controllers
             var message = string.Empty;
             try
             {
-                var result = _departmentService.CreateDepartment(department);
+                var created = _departmentService.CreateDepartment(department) > 0;
 
-                if (result > 0)
-                    return RedirectToAction(nameof(Index));
+                if (created)
+                    TempData["Message"] = "Department is created";
                 else
-                {
-                    message = "Department is not created";
-                    ModelState.AddModelError(string.Empty, message);
-                    return View(department);
-                }
+                    TempData["Message"] = "Department is not created";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {

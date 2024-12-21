@@ -37,15 +37,12 @@ namespace Corporation.PL.Controllers
             var message = string.Empty;
             try
             {
-                var created = _employeeService.CreateEmployee(employee);
-                if (created > 0)
-                    return RedirectToAction(nameof(Index));
+                var created = _employeeService.CreateEmployee(employee) > 0;
+                if (created)
+                    TempData["Message"] = "Employee is created";
                 else
-                {
-                    message = "Department is not created";
-                    ModelState.AddModelError(string.Empty, message);
-                    return View(employee);
-                }
+                    TempData["Message"] = "Employee is not created";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -78,7 +75,7 @@ namespace Corporation.PL.Controllers
                 return BadRequest();
 
             var employee = _employeeService.GetEmployeeById(id.Value);
-            
+
             if (employee is null)
                 return NotFound();
 
