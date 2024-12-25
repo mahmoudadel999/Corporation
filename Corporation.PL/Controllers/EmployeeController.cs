@@ -16,9 +16,9 @@ namespace Corporation.PL.Controllers
         private readonly IWebHostEnvironment _environment = environment;
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string search)
         {
-            var employees = _employeeService.GetAllEmployees();
+            var employees = _employeeService.GetAllEmployees(search);
             return View(employees);
         }
 

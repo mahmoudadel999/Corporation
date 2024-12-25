@@ -3,7 +3,10 @@ using Corporation.BLL.Services.Employees;
 using Corporation.DAL.Persistence.Data;
 using Corporation.DAL.Persistence.Repositories.Departments;
 using Corporation.DAL.Persistence.Repositories.Employees;
+using Corporation.DAL.Persistence.UintOfWork;
+using Corporation.PL.Mapping;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Corporation.PL
 {
@@ -30,6 +33,15 @@ namespace Corporation.PL
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+            builder.Services.AddAutoMapper(M => M.AddProfile<MappingProfile>());
+            /// builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
+            /// builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+            /// builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+ 
 
             #endregion
 

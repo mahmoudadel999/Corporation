@@ -1,19 +1,20 @@
 ﻿using Corporation.BLL.Models.Employees;
 using Corporation.DAL.Models.Employees;
 using Corporation.DAL.Persistence.Repositories.Employees;
+using Corporation.DAL.Persistence.UintOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.BLL.Services.Employees
 {
-    public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
+    public class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public IEnumerable<EmployeeDto> GetAllEmployees(string search)
         {
-            return _employeeRepository
+            return _unitOfWork.EmployeeRepository
                 .GetAllAsIQueryable()
-                .Where(E => !E.IsDeleted)
+                .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
                 .Include(E => E.Department)
                 .Select(E => new EmployeeDto
                 {
@@ -25,13 +26,13 @@ namespace Corporation.BLL.Services.Employees
                     Email = E.Email,
                     Gender = E.Gender.ToString(),
                     EmployeeType = E.EmployeeType.ToString(),
-                    Department = E.Department.Name,
+                    Department = E.Department!.Name,
                 });
         }
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
-            var employee = _employeeRepository.Get(id);
+            var employee = _unitOfWork.EmployeeRepository.Get(id);
             if (employee is not null)
                 return new EmployeeDetailsDto()
                 {
@@ -72,7 +73,8 @@ namespace Corporation.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
             };
 
-            return _employeeRepository.Add(created);
+            _unitOfWork.EmployeeRepository.Add(created);
+            return _unitOfWork.Complete();
         }
 
         public int UpdateEmployee(UpdatedEmployeeDto employee)
@@ -96,14 +98,16 @@ namespace Corporation.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
             };
 
-            return _employeeRepository.Update(Updated);
+            _unitOfWork.EmployeeRepository.Update(Updated);
+            return _unitOfWork.Complete();
         }
 
         public bool DeleteEmployee(int id)
         {
-            var employee = _employeeRepository.Get(id);
+            var employeeRepos = _unitOfWork.EmployeeRepository;
+            var employee = employeeRepos.Get(id);
             if (employee is { })
-                _employeeRepository.Delete(employee);
+                _unitOfWork.EmployeeRepository.Delete(employee);
 
             return false;
         }

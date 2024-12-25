@@ -1,4 +1,5 @@
-﻿using Corporation.BLL.Models.Departments;
+﻿using AutoMapper;
+using Corporation.BLL.Models.Departments;
 using Corporation.BLL.Services.Departments;
 using Corporation.PL.ViewModels.Departments;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,14 @@ namespace Corporation.PL.Controllers
     public class DepartmentController(
         IDepartmentService departmentService,
         ILogger<DepartmentController> logger,
-        IWebHostEnvironment environment
+        IWebHostEnvironment environment,
+        IMapper mapper
         ) : Controller
     {
         private readonly IDepartmentService _departmentService = departmentService;
-        private readonly IWebHostEnvironment _environment = environment;
         private readonly ILogger<DepartmentController> _logger = logger;
+        private readonly IWebHostEnvironment _environment = environment;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public IActionResult Index()
@@ -21,7 +24,6 @@ namespace Corporation.PL.Controllers
             var departments = _departmentService.GetAllDepartments();
             return View(departments);
         }
-
 
         [HttpGet]
         public IActionResult Create()
@@ -40,6 +42,8 @@ namespace Corporation.PL.Controllers
             try
             {
                 var created = _departmentService.CreateDepartment(department) > 0;
+
+                var createdDept = _mapper.Map<CreatedDepartmentDto>(department);
 
                 if (created)
                     TempData["Message"] = "Department is created";
@@ -80,13 +84,9 @@ namespace Corporation.PL.Controllers
             if (department is null)
                 return NotFound();
 
-            return View(new DepartmentEditViewModel()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
-            });
+            var departmentVM = _mapper.Map<DepartmentDetailsDto, DepartmentEditViewModel>(department);
+
+            return View(departmentVM);
         }
 
         [HttpPost]
@@ -100,14 +100,7 @@ namespace Corporation.PL.Controllers
 
             try
             {
-                var updated = new UpdatedDepartmentDto()
-                {
-                    Id = id,
-                    Code = department.Code,
-                    Name = department.Name,
-                    Description = department.Description,
-                    CreationDate = department.CreationDate,
-                };
+                var updated = _mapper.Map<UpdatedDepartmentDto>(department);
 
                 var result = _departmentService.UpdateDepartment(updated) > 0;
 
