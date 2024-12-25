@@ -1,6 +1,7 @@
 ﻿@model CreatedEmployeeDto
+
 @{
-    ViewData["Title"] = "Create Employee";
+    var departments = new SelectList(ViewData["departments"] as IEnumerable<DepartmentDto>, nameof(DepartmentDto.Id), nameof(DepartmentDto.Name));
 }
 
 <div class="row justify-content-center align-items-center">
@@ -46,6 +47,7 @@
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
+
             <div class="form-group mb-1">
                 <label class="form-label" asp-for="HiringDate"></label>
                 <input type="date" asp-for="HiringDate" class="form-control" />
@@ -66,6 +68,13 @@
             <div class="form-check mb-1 col-6">
                 <label class="form-check-label" asp-for="IsActive"></label>
                 <input asp-for="IsActive" class="form-check-input" />
+            </div>
+
+            <div class="form-group col-6">
+                <label asp-for="DepartmentId"></label>
+                <select asp-for="DepartmentId" asp-items="@departments" class="form-control">
+                    <option value="">Select Department</option>
+                </select>
             </div>
 
             <div class="form-group col-6">

@@ -1,4 +1,5 @@
 ﻿using Corporation.BLL.Models.Employees;
+using Corporation.BLL.Services.Departments;
 using Corporation.BLL.Services.Employees;
 using Corporation.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,9 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create([FromServices] IDepartmentService departmentService)
         {
+            ViewData["departments"] = departmentService.GetAllDepartments();
             return View();
         }
 
@@ -69,7 +71,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id, [FromServices] IDepartmentService departmentService)
         {
             if (id is null)
                 return BadRequest();
@@ -78,6 +80,10 @@ namespace Corporation.PL.Controllers
 
             if (employee is null)
                 return NotFound();
+
+            //ViewBag.departments = departmentService.GetAllDepartments();
+            ViewData["departments"] = departmentService.GetAllDepartments();
+
 
             return View(new EmployeeEditViewModel()
             {

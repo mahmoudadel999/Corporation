@@ -1,6 +1,7 @@
 ﻿@model EmployeeEditViewModel
+
 @{
-    ViewData["Title"] = "Edit Employee";
+    var departments = new SelectList(ViewData["departments"] as IEnumerable<DepartmentDto>, nameof(DepartmentDto.Id), nameof(DepartmentDto.Name));
 }
 
 <div class="row justify-content-center align-items-center">
@@ -69,9 +70,15 @@
             </div>
 
             <div class="form-group col-6">
+                <label asp-for="DepartmentId"></label>
+                <select asp-for="DepartmentId" asp-items="@departments" class="form-control">
+                    <option value="">Select Department</option>
+                </select>
+            </div>
+
+            <div class="form-group col-6">
                 <label asp-for="EmployeeType"></label>
                 <select asp-for="EmployeeType" asp-items="Html.GetEnumSelectList<EmployeeType>()" class="form-control">
-                    <option value="">Select Employee Type</option>
                 </select>
             </div>
 
