@@ -1,10 +1,5 @@
 ﻿using Corporation.DAL.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Corporation.DAL.Models.Departments;
 
 namespace Corporation.DAL.Models.Employees
 {
@@ -20,5 +15,11 @@ namespace Corporation.DAL.Models.Employees
         public DateOnly HiringDate { get; set; }
         public Gender Gender { get; set; }
         public EmployeeType EmployeeType { get; set; }
+
+        // FK Column
+        public int? DepartmentId { get; set; }
+
+        // Navigational Property [One]
+        public virtual Department? Department { get; set; }
     }
 }

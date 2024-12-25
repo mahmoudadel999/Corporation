@@ -1,12 +1,7 @@
 ﻿using Corporation.BLL.Models.Employees;
-using Corporation.DAL.Common.Enums;
 using Corporation.DAL.Models.Employees;
 using Corporation.DAL.Persistence.Repositories.Employees;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.BLL.Services.Employees
 {
@@ -16,17 +11,22 @@ namespace Corporation.BLL.Services.Employees
 
         public IEnumerable<EmployeeDto> GetAllEmployees()
         {
-            return _employeeRepository.GetAllAsIQueryable().Select(E => new EmployeeDto
-            {
-                Id = E.Id,
-                Name = E.Name,
-                Age = E.Age,
-                IsActive = E.IsActive,
-                Salary = E.Salary,
-                Email = E.Email,
-                Gender = E.Gender.ToString(),
-                EmployeeType = E.EmployeeType.ToString(),
-            });
+            return _employeeRepository
+                .GetAllAsIQueryable()
+                .Where(E => !E.IsDeleted)
+                .Include(E => E.Department)
+                .Select(E => new EmployeeDto
+                {
+                    Id = E.Id,
+                    Name = E.Name,
+                    Age = E.Age,
+                    IsActive = E.IsActive,
+                    Salary = E.Salary,
+                    Email = E.Email,
+                    Gender = E.Gender.ToString(),
+                    EmployeeType = E.EmployeeType.ToString(),
+                    Department = E.Department.Name,
+                });
         }
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
@@ -46,6 +46,7 @@ namespace Corporation.BLL.Services.Employees
                     HiringDate = employee.HiringDate,
                     Gender = employee.Gender,
                     EmployeeType = employee.EmployeeType,
+                    Department = employee.Department?.Name,
                 };
 
             return null;
@@ -65,6 +66,7 @@ namespace Corporation.BLL.Services.Employees
                 HiringDate = employee.HiringDate,
                 Gender = employee.Gender,
                 EmployeeType = employee.EmployeeType,
+                DepartmentId = employee.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
@@ -88,6 +90,7 @@ namespace Corporation.BLL.Services.Employees
                 HiringDate = employee.HiringDate,
                 Gender = employee.Gender,
                 EmployeeType = employee.EmployeeType,
+                DepartmentId = employee.DepartmentId,
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,

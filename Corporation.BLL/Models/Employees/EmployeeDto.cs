@@ -1,10 +1,4 @@
-﻿using Corporation.DAL.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Corporation.BLL.Models.Employees
 {
@@ -28,5 +22,7 @@ namespace Corporation.BLL.Models.Employees
 
         [Display(Name = "Employee Type")]
         public string EmployeeType { get; set; } = null!;
+
+        public string? Department { get; set; }
     }
 }

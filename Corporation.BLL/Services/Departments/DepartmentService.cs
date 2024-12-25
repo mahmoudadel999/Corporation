@@ -1,5 +1,5 @@
 ﻿using Corporation.BLL.Models.Departments;
-using Corporation.DAL.Models.Department;
+using Corporation.DAL.Models.Departments;
 using Corporation.DAL.Persistence.Repositories.Departments;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,11 +1,6 @@
-﻿using Corporation.DAL.Models.Department;
+﻿using Corporation.DAL.Models.Departments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Corporation.DAL.Persistence.Data.Configurations.Departments
 {
@@ -18,6 +13,12 @@ namespace Corporation.DAL.Persistence.Data.Configurations.Departments
             builder.Property(D => D.Code).HasColumnType("varchar(20)").IsRequired();
             builder.Property(D => D.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
             builder.Property(D => D.LastModifiedOn).HasComputedColumnSql("Convert(date, GETUTCDATE())");
+
+            builder
+                .HasMany(D => D.Employees)
+                .WithOne(E => E.Department)
+                .HasForeignKey(E => E.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

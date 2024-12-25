@@ -1,10 +1,5 @@
 ﻿using Corporation.DAL.Common.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Corporation.BLL.Models.Employees
 {
@@ -40,5 +35,7 @@ namespace Corporation.BLL.Models.Employees
         public DateOnly HiringDate { get; set; }
         public Gender Gender { get; set; }
         public EmployeeType EmployeeType { get; set; }
+
+        public int? DepartmentId { get; set; }
     }
 }

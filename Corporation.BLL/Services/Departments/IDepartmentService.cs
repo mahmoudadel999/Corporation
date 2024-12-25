@@ -1,5 +1,5 @@
 ﻿using Corporation.BLL.Models.Departments;
-using Corporation.DAL.Models.Department;
+using Corporation.DAL.Models.Departments;
 using System;
 using System.Collections.Generic;
 using System.Linq;

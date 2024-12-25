@@ -22,6 +22,7 @@ namespace Corporation.PL.Controllers
             return View(departments);
         }
 
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -29,6 +30,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreatedDepartmentDto department)
         {
             if (!ModelState.IsValid)
@@ -37,16 +39,13 @@ namespace Corporation.PL.Controllers
             var message = string.Empty;
             try
             {
-                var result = _departmentService.CreateDepartment(department);
+                var created = _departmentService.CreateDepartment(department) > 0;
 
-                if (result > 0)
-                    return RedirectToAction(nameof(Index));
+                if (created)
+                    TempData["Message"] = "Department is created";
                 else
-                {
-                    message = "Department is not created";
-                    ModelState.AddModelError(string.Empty, message);
-                    return View(department);
-                }
+                    TempData["Message"] = "Department is not created";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -91,6 +90,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel department)
         {
             if (!ModelState.IsValid)
@@ -126,7 +126,7 @@ namespace Corporation.PL.Controllers
             return View(department);
         }
 
-        [HttpGet]
+        [HttpGet] // Create view delete [HttpGet] when you decide to delete the department you will go to view and submit delete department.
         public IActionResult Delete(int? id)
         {
             if (id is null)
@@ -141,6 +141,7 @@ namespace Corporation.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var message = string.Empty;

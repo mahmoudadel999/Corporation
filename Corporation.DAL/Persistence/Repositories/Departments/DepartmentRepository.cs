@@ -1,4 +1,4 @@
-﻿using Corporation.DAL.Models.Department;
+﻿using Corporation.DAL.Models.Departments;
 using Corporation.DAL.Persistence.Data;
 using Corporation.DAL.Persistence.Repositories._IGenericBase;
 

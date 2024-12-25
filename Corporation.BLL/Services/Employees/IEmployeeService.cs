@@ -1,6 +1,4 @@
 ﻿using Corporation.BLL.Models.Employees;
-using Corporation.DAL.Models.Department;
-using Corporation.DAL.Models.Employees;
 
 namespace Corporation.BLL.Services.Employees
 {
