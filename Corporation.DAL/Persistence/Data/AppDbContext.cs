@@ -1,12 +1,7 @@
-﻿using Corporation.DAL.Models.Department;
+﻿using Corporation.DAL.Models.Departments;
 using Corporation.DAL.Models.Employees;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Corporation.DAL.Persistence.Data
 {
