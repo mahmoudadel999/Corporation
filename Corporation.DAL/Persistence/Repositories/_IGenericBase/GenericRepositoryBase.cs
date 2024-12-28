@@ -15,12 +15,12 @@ namespace Corporation.DAL.Persistence.Repositories._IGenericBase
     {
         private protected readonly AppDbContext _dbContext = dbContext;
 
-        public IEnumerable<T> GetAll(bool WithAsNoTracking = true)
+        public async Task<IEnumerable<T>> GetAllAsync(bool WithAsNoTracking = true)
         {
             if (WithAsNoTracking)
-                _dbContext.Set<T>().Where(X => !X.IsDeleted).AsNoTracking().ToList();
+                await _dbContext.Set<T>().Where(X => !X.IsDeleted).AsNoTracking().ToListAsync();
 
-            return _dbContext.Set<T>().ToList();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public IQueryable<T> GetAllAsIQueryable()
@@ -28,28 +28,19 @@ namespace Corporation.DAL.Persistence.Repositories._IGenericBase
             return _dbContext.Set<T>();
         }
 
-        public T? Get(int id)
+        public async Task<T?> GetAsync(int id)
         {
-            return _dbContext.Find<T>(id);
+            return await _dbContext.FindAsync<T>(id);
         }
 
-        public int Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
-        }
+        public void Add(T entity) => _dbContext.Set<T>().Add(entity);
 
-        public int Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
-        }
+        public void Update(T entity) => _dbContext.Set<T>().Update(entity);
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             entity.IsDeleted = true;
             _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
         }
     }
 }

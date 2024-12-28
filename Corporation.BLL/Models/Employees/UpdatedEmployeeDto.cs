@@ -1,4 +1,5 @@
 ﻿using Corporation.DAL.Common.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace Corporation.BLL.Models.Employees
@@ -37,5 +38,7 @@ namespace Corporation.BLL.Models.Employees
         public EmployeeType EmployeeType { get; set; }
 
         public int? DepartmentId { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 }
