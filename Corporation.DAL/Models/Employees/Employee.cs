@@ -1,5 +1,6 @@
 ﻿using Corporation.DAL.Common.Enums;
 using Corporation.DAL.Models.Departments;
+using Microsoft.AspNetCore.Http;
 
 namespace Corporation.DAL.Models.Employees
 {
@@ -21,5 +22,7 @@ namespace Corporation.DAL.Models.Employees
 
         // Navigational Property [One]
         public virtual Department? Department { get; set; }
+
+        public string? Image { get; set; }
     }
 }

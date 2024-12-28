@@ -1,14 +1,16 @@
-﻿using Corporation.BLL.Models.Employees;
+﻿using Corporation.BLL.Common.Services.Attachments;
+using Corporation.BLL.Models.Employees;
 using Corporation.DAL.Models.Employees;
-using Corporation.DAL.Persistence.Repositories.Employees;
 using Corporation.DAL.Persistence.UintOfWork;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Corporation.BLL.Services.Employees
 {
-    public class EmployeeService(IUnitOfWork unitOfWork) : IEmployeeService
+    public class EmployeeService(IUnitOfWork unitOfWork, IAttachmentService attachmentService) : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IAttachmentService _attachmentService = attachmentService;
 
         public IEnumerable<EmployeeDto> GetAllEmployees(string search)
         {
@@ -27,6 +29,7 @@ namespace Corporation.BLL.Services.Employees
                     Gender = E.Gender.ToString(),
                     EmployeeType = E.EmployeeType.ToString(),
                     Department = E.Department!.Name,
+                    Image = E.Image,
                 });
         }
 
@@ -46,15 +49,17 @@ namespace Corporation.BLL.Services.Employees
                     PhoneNumber = employee.PhoneNumber,
                     HiringDate = employee.HiringDate,
                     Gender = employee.Gender,
+                    Image = employee.Image,
                     EmployeeType = employee.EmployeeType,
                     Department = employee.Department?.Name,
-                };
+                };  
 
             return null;
         }
 
         public int CreateEmployee(CreatedEmployeeDto employee)
         {
+
             var created = new Employee()
             {
                 Name = employee.Name,
@@ -73,12 +78,17 @@ namespace Corporation.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
             };
 
+            if (employee.Image is not null)
+                created.Image = _attachmentService.Upload(employee.Image, "images");
+
             _unitOfWork.EmployeeRepository.Add(created);
             return _unitOfWork.Complete();
         }
 
         public int UpdateEmployee(UpdatedEmployeeDto employee)
         {
+
+
             var Updated = new Employee()
             {
                 Id = employee.Id,
@@ -98,6 +108,10 @@ namespace Corporation.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
             };
 
+            if (employee.Image is not null)
+                Updated.Image = _attachmentService.Upload(employee.Image, "images");
+
+
             _unitOfWork.EmployeeRepository.Update(Updated);
             return _unitOfWork.Complete();
         }
@@ -109,7 +123,7 @@ namespace Corporation.BLL.Services.Employees
             if (employee is { })
                 _unitOfWork.EmployeeRepository.Delete(employee);
 
-            return false;
+            return _unitOfWork.Complete() > 0;
         }
     }
 }

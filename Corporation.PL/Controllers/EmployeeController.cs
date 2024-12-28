@@ -3,6 +3,7 @@ using Corporation.BLL.Services.Departments;
 using Corporation.BLL.Services.Employees;
 using Corporation.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace Corporation.PL.Controllers
 {
