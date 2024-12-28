@@ -12,9 +12,9 @@ namespace Corporation.BLL.Services.Employees
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IAttachmentService _attachmentService = attachmentService;
 
-        public IEnumerable<EmployeeDto> GetAllEmployees(string search)
+        public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(string search)
         {
-            return _unitOfWork.EmployeeRepository
+            return await _unitOfWork.EmployeeRepository
                 .GetAllAsIQueryable()
                 .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
                 .Include(E => E.Department)
@@ -30,12 +30,12 @@ namespace Corporation.BLL.Services.Employees
                     EmployeeType = E.EmployeeType.ToString(),
                     Department = E.Department!.Name,
                     Image = E.Image,
-                });
+                }).ToListAsync();
         }
 
-        public EmployeeDetailsDto? GetEmployeeById(int id)
+        public async Task<EmployeeDetailsDto?> GetEmployeeByIdAsync(int id)
         {
-            var employee = _unitOfWork.EmployeeRepository.Get(id);
+            var employee = await _unitOfWork.EmployeeRepository.GetAsync(id);
             if (employee is not null)
                 return new EmployeeDetailsDto()
                 {
@@ -52,12 +52,12 @@ namespace Corporation.BLL.Services.Employees
                     Image = employee.Image,
                     EmployeeType = employee.EmployeeType,
                     Department = employee.Department?.Name,
-                };  
+                };
 
             return null;
         }
 
-        public int CreateEmployee(CreatedEmployeeDto employee)
+        public async Task<int> CreateEmployeeAsync(CreatedEmployeeDto employee)
         {
 
             var created = new Employee()
@@ -79,13 +79,13 @@ namespace Corporation.BLL.Services.Employees
             };
 
             if (employee.Image is not null)
-                created.Image = _attachmentService.Upload(employee.Image, "images");
+                created.Image = await _attachmentService.UploadAsync(employee.Image, "images");
 
             _unitOfWork.EmployeeRepository.Add(created);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
 
-        public int UpdateEmployee(UpdatedEmployeeDto employee)
+        public async Task<int> UpdateEmployeeAsync(UpdatedEmployeeDto employee)
         {
 
 
@@ -109,21 +109,21 @@ namespace Corporation.BLL.Services.Employees
             };
 
             if (employee.Image is not null)
-                Updated.Image = _attachmentService.Upload(employee.Image, "images");
+                Updated.Image = await _attachmentService.UploadAsync(employee.Image, "images");
 
 
             _unitOfWork.EmployeeRepository.Update(Updated);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
 
-        public bool DeleteEmployee(int id)
+        public async Task<bool> DeleteEmployeeAsync(int id)
         {
             var employeeRepos = _unitOfWork.EmployeeRepository;
-            var employee = employeeRepos.Get(id);
+            var employee = await employeeRepos.GetAsync(id);
             if (employee is { })
                 _unitOfWork.EmployeeRepository.Delete(employee);
 
-            return _unitOfWork.Complete() > 0;
+            return await _unitOfWork.CompleteAsync() > 0;
         }
     }
 }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Corporation.DAL.Persistence.UintOfWork
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         public IEmployeeRepository EmployeeRepository { get; }
         public IDepartmentRepository DepartmentRepository { get; }
 
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

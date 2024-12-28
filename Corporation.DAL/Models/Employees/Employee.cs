@@ -1,6 +1,5 @@
 ﻿using Corporation.DAL.Common.Enums;
 using Corporation.DAL.Models.Departments;
-using Microsoft.AspNetCore.Http;
 
 namespace Corporation.DAL.Models.Employees
 {

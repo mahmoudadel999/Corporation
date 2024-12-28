@@ -4,8 +4,8 @@ namespace Corporation.BLL.Common.Services.Attachments
 {
     public interface IAttachmentService
     {
-        string Upload(IFormFile file, string folder);
-     
-        bool Delete(string filePath);
+        Task<string> UploadAsync(IFormFile file, string folder);
+
+        bool DeleteAsync(string filePath);
     }
 }

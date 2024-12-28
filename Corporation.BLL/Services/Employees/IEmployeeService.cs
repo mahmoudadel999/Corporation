@@ -4,10 +4,10 @@ namespace Corporation.BLL.Services.Employees
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeDto> GetAllEmployees(string search);
-        EmployeeDetailsDto? GetEmployeeById(int id);
-        int CreateEmployee(CreatedEmployeeDto employee);
-        int UpdateEmployee(UpdatedEmployeeDto employee);
-        bool DeleteEmployee(int id);
+        Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(string search);
+        Task<EmployeeDetailsDto?> GetEmployeeByIdAsync(int id);
+        Task<int> CreateEmployeeAsync(CreatedEmployeeDto employee);
+        Task<int> UpdateEmployeeAsync(UpdatedEmployeeDto employee);
+        Task<bool> DeleteEmployeeAsync(int id);
     }
 }

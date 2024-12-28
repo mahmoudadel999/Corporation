@@ -1,9 +1,8 @@
-﻿using Corporation.BLL.Models.Employees;
+﻿using Microsoft.AspNetCore.Mvc;
+using Corporation.BLL.Models.Employees;
 using Corporation.BLL.Services.Departments;
 using Corporation.BLL.Services.Employees;
 using Corporation.PL.ViewModels.Employees;
-using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
 
 namespace Corporation.PL.Controllers
 {
@@ -12,27 +11,36 @@ namespace Corporation.PL.Controllers
         ILogger<EmployeeController> logger,
         IWebHostEnvironment environment) : Controller
     {
+        #region Service
+        
         private readonly IEmployeeService _employeeService = employeeService;
         private readonly ILogger<EmployeeController> _logger = logger;
         private readonly IWebHostEnvironment _environment = environment;
 
+        #endregion
+  
+        #region Index
+
         [HttpGet]
-        public IActionResult Index(string search)
+        public async Task<IActionResult> Index(string search)
         {
-            var employees = _employeeService.GetAllEmployees(search);
+            var employees = await _employeeService.GetAllEmployeesAsync(search);
             return View(employees);
         }
 
+        #endregion
+
+        #region Create
+
         [HttpGet]
-        public IActionResult Create([FromServices] IDepartmentService departmentService)
+        public IActionResult Create()
         {
-            ViewData["departments"] = departmentService.GetAllDepartments();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreatedEmployeeDto employee)
+        public async Task<IActionResult> Create(CreatedEmployeeDto employee)
         {
             if (!ModelState.IsValid)
                 return View();
@@ -40,7 +48,7 @@ namespace Corporation.PL.Controllers
             var message = string.Empty;
             try
             {
-                var created = _employeeService.CreateEmployee(employee) > 0;
+                var created = await _employeeService.CreateEmployeeAsync(employee) > 0;
                 if (created)
                     TempData["Message"] = "Employee is created";
                 else
@@ -59,31 +67,40 @@ namespace Corporation.PL.Controllers
 
         }
 
-        public IActionResult Details(int? id)
+        #endregion
+
+        #region Details
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
                 return BadRequest();
 
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
             if (employee is null)
                 return NotFound();
 
             return View(employee);
         }
 
+        #endregion
+
+        #region Update
+
         [HttpGet]
-        public IActionResult Edit(int? id, [FromServices] IDepartmentService departmentService)
+        public async Task<IActionResult> Edit(int? id, [FromServices] IDepartmentService departmentService)
         {
             if (id is null)
                 return BadRequest();
 
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
 
             if (employee is null)
                 return NotFound();
 
             //ViewBag.departments = departmentService.GetAllDepartments();
-            ViewData["departments"] = departmentService.GetAllDepartments();
+            ViewData["departments"] = departmentService.GetAllDepartmentsAsync();
 
 
             return View(new EmployeeEditViewModel()
@@ -103,7 +120,7 @@ namespace Corporation.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, UpdatedEmployeeDto employee)
+        public async Task<IActionResult> Edit([FromRoute] int id, UpdatedEmployeeDto employee)
         {
             if (!ModelState.IsValid)
                 return View();
@@ -112,7 +129,7 @@ namespace Corporation.PL.Controllers
 
             try
             {
-                var updated = _employeeService.UpdateEmployee(employee) > 0;
+                var updated = await _employeeService.UpdateEmployeeAsync(employee) > 0;
                 if (updated)
                     return RedirectToAction(nameof(Index));
                 message = "An error has occured during updating employee";
@@ -128,15 +145,19 @@ namespace Corporation.PL.Controllers
             return View(employee);
         }
 
+        #endregion
+
+        #region Delete
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
 
             try
             {
-                var deleted = _employeeService.DeleteEmployee(id);
+                var deleted = await _employeeService.DeleteEmployeeAsync(id);
                 if (deleted)
                     return RedirectToAction(nameof(Index));
                 message = "An error has occured during deleting employee";
@@ -149,5 +170,7 @@ namespace Corporation.PL.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
     }
 }

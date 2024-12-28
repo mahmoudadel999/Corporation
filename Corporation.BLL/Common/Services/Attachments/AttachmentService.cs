@@ -8,7 +8,7 @@ namespace Corporation.BLL.Common.Services.Attachments
         private readonly List<string> _allowExtensions = new List<string>() { ".jpg", ".png", ".jpeg" };
         private const long _allowedSize = 2_097_152;
 
-        public string Upload(IFormFile file, string folderName)
+        public async Task<string> UploadAsync(IFormFile file, string folderName)
         {
             var extension = Path.GetExtension(file.FileName);
             if (!_allowExtensions.Contains(extension))
@@ -27,12 +27,12 @@ namespace Corporation.BLL.Common.Services.Attachments
             var filePath = Path.Combine(folderPath, fileName);
 
             using var fileStream = new FileStream(filePath, FileMode.Create);
-            file.CopyTo(fileStream);
+            await file.CopyToAsync(fileStream);
 
             return fileName;
         }
 
-        public bool Delete(string filePath)
+        public bool DeleteAsync(string filePath)
         {
             if (File.Exists(filePath))
             {

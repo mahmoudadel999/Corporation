@@ -16,10 +16,10 @@ namespace Corporation.DAL.Persistence.UintOfWork
         public IEmployeeRepository EmployeeRepository => new EmployeeRepository(_dbContext);
         public IDepartmentRepository DepartmentRepository => new DepartmentRepository(_dbContext);
 
-        public int Complete() => _dbContext.SaveChanges();
+        public async Task<int> CompleteAsync() => await _dbContext.SaveChangesAsync();
 
 
-        public void Dispose() => _dbContext.Dispose();
+        public async ValueTask DisposeAsync() => await _dbContext.DisposeAsync();
 
     }
 }
