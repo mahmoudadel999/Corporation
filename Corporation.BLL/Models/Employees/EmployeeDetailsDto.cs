@@ -38,5 +38,6 @@ namespace Corporation.BLL.Models.Employees
         #endregion
 
         public string? Department { get; set; }
+        public string? Image { get; set; }
     }
 }

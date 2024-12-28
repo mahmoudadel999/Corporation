@@ -1,27 +1,38 @@
-﻿using Corporation.BLL.Models.Departments;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Corporation.BLL.Models.Departments;
 using Corporation.BLL.Services.Departments;
 using Corporation.PL.ViewModels.Departments;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Corporation.PL.Controllers
 {
     public class DepartmentController(
         IDepartmentService departmentService,
         ILogger<DepartmentController> logger,
-        IWebHostEnvironment environment
+        IWebHostEnvironment environment,
+        IMapper mapper
         ) : Controller
     {
+        #region Service
         private readonly IDepartmentService _departmentService = departmentService;
-        private readonly IWebHostEnvironment _environment = environment;
         private readonly ILogger<DepartmentController> _logger = logger;
+        private readonly IWebHostEnvironment _environment = environment;
+        private readonly IMapper _mapper = mapper;
+
+        #endregion
+  
+        #region Index
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _departmentService.GetAllDepartments();
+            var departments = await _departmentService.GetAllDepartmentsAsync();
             return View(departments);
         }
 
+        #endregion
+  
+        #region Create
 
         [HttpGet]
         public IActionResult Create()
@@ -31,7 +42,7 @@ namespace Corporation.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreatedDepartmentDto department)
+        public async Task<IActionResult> Create(CreatedDepartmentDto department)
         {
             if (!ModelState.IsValid)
                 return View(department);
@@ -39,7 +50,9 @@ namespace Corporation.PL.Controllers
             var message = string.Empty;
             try
             {
-                var created = _departmentService.CreateDepartment(department) > 0;
+                var created = await _departmentService.CreateDepartmentAsync(department) > 0;
+
+                var createdDept = _mapper.Map<CreatedDepartmentDto>(department);
 
                 if (created)
                     TempData["Message"] = "Department is created";
@@ -57,41 +70,45 @@ namespace Corporation.PL.Controllers
             return View(department);
         }
 
+        #endregion
+   
+        #region Details
+
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id is null)
                 return BadRequest(); // 400
 
-            var department = _departmentService.GetDepartmentById(id.Value);
+            var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
             if (department is null)
                 return NotFound();  // 404
 
             return View(department);
         }
 
+        #endregion
+
+        #region Update
+  
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id is null)
                 return BadRequest();
 
-            var department = _departmentService.GetDepartmentById(id.Value);
+            var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
             if (department is null)
                 return NotFound();
 
-            return View(new DepartmentEditViewModel()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
-            });
+            var departmentVM = _mapper.Map<DepartmentDetailsDto, DepartmentEditViewModel>(department);
+
+            return View(departmentVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel department)
+        public async Task<IActionResult> Edit([FromRoute] int id, DepartmentEditViewModel department)
         {
             if (!ModelState.IsValid)
                 return View(department);
@@ -100,16 +117,9 @@ namespace Corporation.PL.Controllers
 
             try
             {
-                var updated = new UpdatedDepartmentDto()
-                {
-                    Id = id,
-                    Code = department.Code,
-                    Name = department.Name,
-                    Description = department.Description,
-                    CreationDate = department.CreationDate,
-                };
+                var updated = _mapper.Map<UpdatedDepartmentDto>(department);
 
-                var result = _departmentService.UpdateDepartment(updated) > 0;
+                var result = await _departmentService.UpdateDepartmentAsync(updated) > 0;
 
                 if (result)
                     return RedirectToAction(nameof(Index));
@@ -126,29 +136,19 @@ namespace Corporation.PL.Controllers
             return View(department);
         }
 
-        [HttpGet] // Create view delete [HttpGet] when you decide to delete the department you will go to view and submit delete department.
-        public IActionResult Delete(int? id)
-        {
-            if (id is null)
-                return BadRequest();
+        #endregion
 
-            var department = _departmentService.GetDepartmentById(id.Value);
-
-            if (department is null)
-                return NotFound();
-
-            return View(department);
-        }
+        #region Delete
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var message = string.Empty;
 
             try
             {
-                var deleted = _departmentService.DeleteDepartment(id);
+                var deleted = await _departmentService.DeleteDepartmentAsync(id);
                 if (deleted)
                     return RedirectToAction(nameof(Index));
 
@@ -163,5 +163,7 @@ namespace Corporation.PL.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        
+        #endregion
     }
 }
