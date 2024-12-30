@@ -1,11 +1,13 @@
 using Corporation.BLL.Common.Services.Attachments;
 using Corporation.BLL.Services.Departments;
 using Corporation.BLL.Services.Employees;
+using Corporation.DAL.Models.Identity;
 using Corporation.DAL.Persistence.Data;
 using Corporation.DAL.Persistence.Repositories.Departments;
 using Corporation.DAL.Persistence.Repositories.Employees;
 using Corporation.DAL.Persistence.UintOfWork;
 using Corporation.PL.Mapping;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Corporation.PL
@@ -37,11 +39,40 @@ namespace Corporation.PL
             builder.Services.AddTransient<IAttachmentService, AttachmentService>();
 
             builder.Services.AddAutoMapper(M => M.AddProfile<MappingProfile>());
-            /// builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
-            /// builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
-            /// builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredUniqueChars = 1;
+
+                options.User.RequireUniqueEmail = true;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+            })
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/SignIn";
+                options.AccessDeniedPath = "/Home/Error";
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
+            });
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = "Identity.Application";
+                opt.DefaultChallengeScheme = "Identity.Application";
+            })
+                /*.AddCookie("NewScheme", "AspNetCore.NewScheme", opt =>
+                {
+                })*/;
 
             #endregion
 
@@ -62,6 +93,7 @@ namespace Corporation.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Corporation.BLL.Models.Departments;
 using Corporation.BLL.Services.Departments;
 using Corporation.PL.ViewModels.Departments;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Corporation.PL.Controllers
 {
+    [Authorize]
     public class DepartmentController(
         IDepartmentService departmentService,
         ILogger<DepartmentController> logger,

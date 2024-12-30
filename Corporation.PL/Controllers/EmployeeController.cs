@@ -3,9 +3,11 @@ using Corporation.BLL.Models.Employees;
 using Corporation.BLL.Services.Departments;
 using Corporation.BLL.Services.Employees;
 using Corporation.PL.ViewModels.Employees;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Corporation.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController(
         IEmployeeService employeeService,
         ILogger<EmployeeController> logger,
